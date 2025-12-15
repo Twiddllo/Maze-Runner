@@ -1,122 +1,196 @@
 # 🎮 Maze Runner
 
-A terminal-based maze game written in C++ where you navigate through a maze while avoiding ghosts!
+A terminal-based maze game written in **C++** where you navigate through a large ASCII maze while being hunted by ghosts — now with **settings, smarter scoring, two ghost AI modes, and in-memory leaderboards**.
+
+---
 
 ## 📖 About
 
-Maze Runner is a classic maze navigation game developed for **Shahid Chamran University (SCU)**. Navigate through a complex maze, avoid the chasing ghosts, and reach the exit to win! The game features a scoring system, lives management, and a history tracker to keep track of your best scores.
+**Maze Runner** is a console maze game developed as a university project for **Shahid Chamran University (SCU)**. Your goal is simple: survive, avoid ghosts, and reach the exit. The challenge comes from configurable ghost behavior, limited lives, and score pressure.
+
+This version is a **major upgrade** over the previous one, focusing on:
+- Better game control via settings
+- Two different ghost movement models
+- Improved UI inside the terminal
+- Clean separation of gameplay logic
+
+---
 
 ## ✨ Features
 
-- 🎯 **Classic Maze Gameplay**: Navigate through a carefully designed 51x76 maze
-- 👻 **Ghost Enemies**: Three ghosts that chase you through the maze
-- ❤️ **Lives System**: Start with 3 lives - lose them all and it's game over!
-- 📊 **Score Tracking**: Earn points and compete for high scores
-- 📜 **Game History**: View your previous game scores
-- 🎮 **Simple Controls**: Easy-to-use WASD movement controls
-- 🏆 **Win Condition**: Reach the exit (O) to win the game
+- 🧱 **Large ASCII Maze** (51×76)
+- 👻 **Configurable Ghost Enemies** (1–10 ghosts)
+- 🧠 **Two Ghost Movement Modes**
+  - Movement-based (every N player moves)
+  - Time-based (every X seconds)
+- ❤️ **Custom Lives System** (1–10 hearts)
+- 🏆 **Score System** with optional smart scoring
+- 📊 **Top-20 In-Memory Leaderboard** (sorted)
+- ⚙️ **Full Settings Menu** (change difficulty at runtime)
+- 🕹️ **Real-Time Controls** using `conio.h`
+- 🧪 **Hidden Cheat Modes** (intentional 👀)
 
-## 🎮 How to Play
+---
 
-1. **Start the game** and select option `1` from the menu
-2. **Enter your player name** (no spaces allowed)
-3. **Navigate** using:
-   - `W` - Move Up
-   - `S` - Move Down
-   - `A` - Move Left
-   - `D` - Move Right
-4. **Avoid ghosts** (G) - they will chase you!
-5. **Reach the exit** (O) to win
-6. **Press `O`** during gameplay to exit to menu
+## 🎮 Controls
+
+| Key | Action |
+|----|-------|
+| `W` | Move Up |
+| `S` | Move Down |
+| `A` | Move Left |
+| `D` | Move Right |
+| `O` | Exit game (with confirmation) |
+
+Controls are **case-insensitive**.
+
+---
 
 ## 🛠️ Building & Running
 
 ### Prerequisites
-- C++ compiler (GCC, Clang, or MSVC)
-- Windows OS (uses `conio.h` and `cls` command)
+- **Windows OS**
+- C++ compiler (GCC / MinGW or MSVC)
+- `conio.h` support (Windows-only)
 
 ### Compilation
 
-**Using GCC (MinGW on Windows):**
+**GCC / MinGW**
 ```bash
-g++ -o maze_runner app.cpp
+g++ app.cpp -o maze_runner
 ```
 
-**Using MSVC (Visual Studio):**
+**MSVC**
 ```bash
 cl app.cpp /Fe:maze_runner.exe
 ```
 
-**Using Clang:**
-```bash
-clang++ -o maze_runner app.cpp
-```
-
 ### Running
 ```bash
-./maze_runner
-# or on Windows:
 maze_runner.exe
 ```
+
+---
 
 ## 📁 Project Structure
 
 ```
 MAZE RUNNER/
-├── app.cpp          # Main game source code
-├── history.txt      # Game history file (auto-generated)
-└── README.md        # This file
+├── app.cpp      # Entire game logic
+└── README.md    # Documentation
 ```
+
+> No external files are required. Game history is stored **in memory only** (per run).
+
+---
 
 ## 🎯 Game Mechanics
 
-- **Player (P)**: You start at the first empty space in the maze
-- **Ghosts (G)**: Three ghosts spawn randomly and chase you every 10 moves
-- **Exit (O)**: Reach this to win and earn 20 bonus points
-- **Lives**: You have 3 lives. Getting caught by a ghost costs 1 life and 5 points
-- **Score**: Earn points by surviving and reaching the exit
-- **Walls**: Cannot pass through walls (represented by maze characters)
+### Player
+- Starts at the **first empty space** in the maze
+- Represented by `P`
+- Has limited hearts (configurable)
 
-## 📝 Game History
+### Ghosts
+- Represented by `G`
+- Spawn randomly on empty tiles
+- Chase the player directly (greedy movement)
+- Can move:
+  - Every **N moves** (movement-based)
+  - Every **X seconds** (time-based)
 
-The game automatically saves your scores to `history.txt`. View your game history from the main menu by selecting option `2`.
+### Exit
+- Represented by `O`
+- Reaching it ends the game with bonus score
 
-## 🎨 Game Map
+### Scoring
+- +20 points for reaching the exit
+- −5 points when caught by a ghost
+- Optional **Smart Scoring**:
+  - Rewards faster completion
+  - Gives bonus for remaining lives
 
-The game features a custom-designed ASCII maze with walls, corridors, and an exit point. The maze is 51 rows by 76 columns, providing a challenging navigation experience.
+### Game Over
+- Happens when lives reach **0**
+- Score resets to 0 and is added to history
+
+---
+
+## ⚙️ Settings Menu
+
+Accessible from the main menu.
+
+You can modify:
+- Number of ghosts (1–10)
+- Ghost speed (1–20)
+- Player hearts (1–10)
+- Enable / disable smart scoring
+- Switch ghost movement mode
+- Adjust time interval (time-based mode only)
+
+All changes apply **immediately**.
+
+---
+
+## 🧠 Ghost Movement Modes
+
+### 1️⃣ Movement-Based
+- Ghosts move every **N player actions**
+- More predictable
+- Easier to plan around
+
+### 2️⃣ Time-Based
+- Ghosts move **even if player does nothing**
+- Uses `clock()` for timing
+- More pressure, harder gameplay
+
+---
+
+## 📊 Leaderboard
+
+- Stored in memory using `vector`
+- Sorted automatically (highest score first)
+- Displays **top 20 players** only
+- Reset when program exits
+
+---
 
 ## 🐛 Known Limitations
 
-- Windows-specific (`conio.h` and `cls` command)
-- Player name cannot contain spaces
-- Ghosts move every 10 player moves (fixed interval)
+- Windows-only (`conio.h`, `system("cls")`)
+- Ghost AI is direct and non-pathfinding
+- No save/load between runs
+- ASCII rendering depends on terminal width
 
-## 🔮 Future Improvements
+---
 
-- [ ] Cross-platform support (Linux/Mac)
-- [ ] Configurable ghost movement speed
-- [ ] Time-based scoring system
-- [ ] Multiple difficulty levels
-- [ ] Random maze generation
-- [ ] Power-ups and collectibles
+## 🔮 Possible Future Improvements
+
+- [ ] Cross-platform (remove `conio.h`)
+- [ ] File-based persistent leaderboard
+- [ ] Pathfinding ghosts (BFS / A*)
+- [ ] Dynamic maze generation
+- [ ] Difficulty presets
+- [ ] Sound effects
+
+---
 
 ## 👤 Author
 
 **twiddllo**
 
+---
+
 ## 🏫 Institution
 
 **Shahid Chamran University (SCU)**
 
+---
+
 ## 📄 License
 
-This project is open source and available for educational purposes.
-
-## 🤝 Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to fork this project and submit pull requests.
+Open-source, educational use only.
 
 ---
 
-**Enjoy playing Maze Runner! 🎮✨**
-
+> This project prioritizes **clarity, control, and raw logic** over polish. If something feels hard — that’s intentional.
